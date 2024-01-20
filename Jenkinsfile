@@ -4,9 +4,7 @@ pipeline {
     stages {
         stage ("Build Docker Image"){
             steps {
-                script {
-                    sh "echo 'Envio da Imagem'"
-                }
+                sh "echo 'Envio da Imagem'"
             }
         }
 
