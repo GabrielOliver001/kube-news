@@ -2,17 +2,27 @@ pipeline {
     agent any 
 
     stages {
-        stage("Build Docker Image"){
+        stage("Get Source"){
             steps {
-                script {
-                    dockerapp = docker.build("gabrieloliver001/kube-news:v1", '-f ./src/Dockerfile ./src')
+                git url: 'https://github.com/GabrielOliver001/kube-news.git', branch: 'main'
+            }
+        }
+        stage("Build Docker Image"){
+            steps{
+                script{
+                    dockerapp = docker.build("gabrieloliver001/kube-news:${env.BUILD_ID}", '-f ./src/Dockerfile ./src')
                 }
             }
+                
         }
 
         stage("Push Docker Image"){
             steps {
-                sh "echo 'Envio da Imagem'"
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'DockerHub')
+                    dockerapp.push('latest')
+                    dockerapp.push("${env.BUILD_ID}")
+                }
             }
         }
 
