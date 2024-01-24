@@ -11,7 +11,7 @@ pipeline {
             steps {
                 script{
                     dockerapp = docker.build("gabrieloliver01/kube-news:v1", '-f ./src/Dockerfile ./src'
-                }
+            
             }
                 
         }
