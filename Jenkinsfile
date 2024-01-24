@@ -10,7 +10,7 @@ pipeline {
         stage("Build Docker Image"){
             steps {
                 script{
-                    dockerapp = sh 'docker build -t gabrieloliver001/kube-news:${env.BUILD_ID} ./src/Dockerfile ./src'
+                    sh 'docker build -t gabrieloliver001/kube-news:v1 ./src/Dockerfile ./src'
                 }
             }
                 
