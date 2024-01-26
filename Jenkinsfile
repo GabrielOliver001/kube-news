@@ -13,7 +13,7 @@ pipeline {
         stage ("Push Docker Image"){
             steps {
                 script {
-                    docker.withRegistry('http://registry.hub.docker.com', 'dockerhub'){
+                    docker.withRegistry('https://registry-1.docker.io/v2/', 'dockerhub'){
                         dockerapp.push('latest')
                         dockerapp.push('v1')
                     }
