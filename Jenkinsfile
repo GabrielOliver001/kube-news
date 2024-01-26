@@ -5,7 +5,7 @@ pipeline {
         stage ("Build Docker Image"){
             steps {
                 script {
-		    dockerapp = docker.build("gabrieloliver001/kube-news:latest", '-f ./src/Dockerfile ./src')
+		    dockerapp = docker.build("gabrieloliver001/kube-news:${env.BUILD_ID}", '-f ./src/Dockerfile ./src')
 		}
             }
         }
@@ -15,6 +15,7 @@ pipeline {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub'){
                         dockerapp.push('latest')
+			dockerapp.push("${env.BUILD_ID}")
                         
                     }
                 }
@@ -22,8 +23,11 @@ pipeline {
         }
 
         stage ("Deploy no Kubernetes"){
-            steps {
-                sh "echo 'Deploy no Kubernetes'"
+            environment {
+	        tag_version = "${env.BUILD_ID}"   
+	    }
+	    steps {
+                sh 'sed -i "s/{{TAG}}/$tag_version/g" ./k8s/deployment.yaml'
             }
         }
     }
