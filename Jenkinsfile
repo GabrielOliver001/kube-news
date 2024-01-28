@@ -1,10 +1,14 @@
 pipeline {
     agent any 
-
+    environment {
+        DOCKER_CREDENTIALS_ID = 'dockerhub'
+    }
     stages {
         stage ("Build Docker Image"){
             steps {
                 script {
+		    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
 		    dockerapp = docker.build("gabrieloliver001/kube-news:${env.BUILD_ID}", '-f ./src/Dockerfile ./src')
 		}
             }
